@@ -1,0 +1,12 @@
+@using Microsoft.AspNetCore.Components
+<div class="event-card border p-3 mb-3 shadow-sm rounded">
+    <h4>@EventName</h4>
+    <p><strong>Date:</strong> @EventDate</p>
+    <p><strong>Location:</strong> @EventLocation</p>
+</div>
+
+@code {
+    [Parameter, EditorRequired] public required string EventName { get; set; }
+    [Parameter, EditorRequired] public required string EventDate { get; set; }
+    [Parameter, EditorRequired] public required string EventLocation { get; set; }
+}

@@ -1,0 +1,24 @@
+@page "/event-details"
+@inject EventEase.Services.UserSessionService SessionService
+
+<h3>📄 Event Details</h3>
+
+@if (SessionService.IsRegistered)
+{
+    <div class="card mt-3 shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title">@SessionService.SelectedEvent</h5>
+            <p class="card-text">
+                <strong>Registered as:</strong> @SessionService.Name<br />
+                <strong>Email:</strong> @SessionService.Email
+            </p>
+            <p class="text-muted">This information was loaded from the current user session.</p>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-warning mt-3">
+        ⚠️ You haven't registered for any event yet.
+    </div>
+}

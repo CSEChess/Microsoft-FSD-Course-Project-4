@@ -1,0 +1,40 @@
+@page "/attendance"
+@inject EventEase.Services.UserSessionService SessionService
+
+<h3>Attendance Tracker</h3>
+
+@if (SessionService.AllRegistrations.Count == 0)
+{
+    <p>No one has registered yet.</p>
+}
+else
+{
+    <h5>Stats by Event</h5>
+    <ul>
+        @foreach (var stat in SessionService.GetAttendanceStats())
+        {
+            <li><strong>@stat.Key</strong>: @stat.Value attendee(s)</li>
+        }
+    </ul>
+
+    <h5 class="mt-4">All Registrants</h5>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Event</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var record in SessionService.AllRegistrations)
+            {
+                <tr>
+                    <td>@record.Name</td>
+                    <td>@record.Email</td>
+                    <td>@record.SelectedEvent</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

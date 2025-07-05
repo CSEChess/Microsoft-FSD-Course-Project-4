@@ -1,0 +1,84 @@
+@page "/register"
+@using System.ComponentModel.DataAnnotations
+@inject EventEase.Services.UserSessionService SessionService
+
+<h3>Register for an Event</h3>
+
+<EditForm Model="@registrationModel" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label for="name" class="form-label">Full Name</label>
+        <InputText id="name" class="form-control" @bind-Value="registrationModel.Name" />
+        <ValidationMessage For="@(() => registrationModel.Name)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <InputText id="email" class="form-control" @bind-Value="registrationModel.Email" />
+        <ValidationMessage For="@(() => registrationModel.Email)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="event" class="form-label">Select Event</label>
+        <InputSelect id="event" class="form-select" @bind-Value="registrationModel.SelectedEvent">
+            <option disabled selected value="">-- Choose an event --</option>
+            @foreach (var evt in availableEvents)
+            {
+                <option value="@evt">@evt</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="@(() => registrationModel.SelectedEvent)" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Register</button>
+</EditForm>
+
+@if (submissionSuccess)
+{
+    <div class="alert alert-success mt-3">
+        ✅ Registration successful for <strong>@registrationModel.SelectedEvent</strong>!
+    </div>
+}
+
+@code {
+    private RegistrationModel registrationModel = new();
+    private bool submissionSuccess = false;
+
+    private List<string> availableEvents = new()
+    {
+        "Tech Conference",
+        "Startup Expo",
+        "Developer Meetup"
+    };
+
+    private void HandleValidSubmit()
+    {
+        SessionService.Name = registrationModel.Name;
+        SessionService.Email = registrationModel.Email;
+        SessionService.SelectedEvent = registrationModel.SelectedEvent;
+        
+        SessionService.AddRegistration(
+        registrationModel.Name!,
+        registrationModel.Email!,
+        registrationModel.SelectedEvent!
+        );
+        submissionSuccess = true;
+
+        // Later: Store this info in a shared state service
+    }
+
+    public class RegistrationModel
+    {
+        [Required(ErrorMessage = "Name is required")]
+        public string? Name { get; set; }
+
+        [Required(ErrorMessage = "Email is required")]
+        [EmailAddress(ErrorMessage = "Invalid email format")]
+        public string? Email { get; set; }
+
+        [Required(ErrorMessage = "Event selection is required")]
+        public string? SelectedEvent { get; set; }
+    }
+}

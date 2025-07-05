@@ -1,0 +1,34 @@
+﻿@page "/"
+@using EventEase.Shared
+
+<h2>📅 Upcoming Events</h2>
+
+@if (events.Count == 0)
+{
+    <p>No events found.</p>
+}
+else
+{
+    @foreach (var evt in events)
+    {
+        <EventCard EventName="@evt.Name"
+                   EventDate="@evt.Date"
+                   EventLocation="@evt.Location" />
+    }
+}
+
+@code {
+    public class Event
+    {
+        public required string Name { get; set; }
+        public required string Date { get; set; }
+        public required string Location { get; set; }
+    }
+
+    private List<Event> events = new List<Event>
+    {
+        new Event { Name = "Tech Conference", Date = "2025-07-15", Location = "Chennai" },
+        new Event { Name = "Startup Expo", Date = "2025-08-01", Location = "Bangalore" },
+        new Event { Name = "Developer Meetup", Date = "2025-08-20", Location = "Hyderabad" }
+    };
+}
